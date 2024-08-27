@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(to left, lightgreen, lightblue);
+            width: 100%;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            height: 100vh;
+        }
+
+        h1 {
+            margin: auto;
+            color: blue;
+            display: flex;
+            justify-content: center;
+        }
+
+        p {
+            margin: auto;
+            color: blue;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            width: 200px;
+            height: 200px;
+            margin: 20px;
+            background-color: rgb(157, 209, 192);
+
+        }
+
+        .note {
+            width: 200px;
+            height: 200px;
+            margin: 20px;
+            border: none;
+            font-size: 18px;
+            resize: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: rgb(157, 209, 192);
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Note App</h1>
+    <p>
+        Double click to remove note
+    </p>
+    <div class="app " id="app">
+
+        <button class="btn" id="btn">+</button>
+    </div>
+    <script>
+        const btn = document.getElementById('btn');
+        const app = document.getElementById('app');
+
+
+        getNotes().forEach(note => {
+            const noteE = createNoteE(note.id, note.content);
+            app.insertBefore(noteE, btn);
+
+        });
+        function createNoteE(id, content) {
+            const element = document.createElement("textarea");
+            element.value = content;
+            element.placeholder = 'Empty Note';
+            element.classList.add('note');
+
+            element.addEventListener('dblclick', () => {
+                const warning = confirm('Do you want to this note?');
+                if (warning) {
+                    deleteNote(id, element);
+                }
+            });
+            element.addEventListener('input', () => {
+                updateNote(id, element.value);
+            });
+            return element;
+
+        }
+        function deleteNote(id, element) {
+            const target = getNotes().filter((note) => note.id != id);
+            saveNotes(target);
+            app.removeChild(element);
+        }
+        function updateNote(id, content) {
+            const notes = getNotes();
+            const target = notes.find((note) => note.id == id);
+            target.content = content;
+            saveNotes(notes);
+
+        }
+        function addNote() {
+            const notes = getNotes();
+            const getObj = {
+                id: Math.floor(Math.random() * 1000),
+                content: ''
+            };
+            const noteE = createNoteE(getObj.id, getObj.content);
+            app.insertBefore(noteE, btn);
+
+            notes.push(getObj);
+            saveNotes(notes);
+        }
+
+        function saveNotes(notes) {
+            localStorage.setItem('note-app', JSON.stringify(notes));
+        }
+        function getNotes() {
+            return JSON.parse(localStorage.getItem('note-app') || []);
+        }
+        btn.addEventListener('click', addNote);
+
+    </script>
+</body>
+
+</html>
