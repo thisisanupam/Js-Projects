@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-repeat: no-repeat;
+            background-color: black;
+        }
+
+        .completed {
+            text-decoration: line-through;
+        }
+
+        input {
+            margin-left: 200px;
+            background-color: antiquewhite;
+            margin-top: 100px;
+            margin-left: 400px;
+            border-radius: 5px;
+            height: 25px;
+
+        }
+
+        button {
+            background-color: black;
+            color: blanchedalmond;
+            border-radius: 5px;
+        }
+        #taskList{
+            width: 400px;
+            margin: auto;
+            border: 2px solid ;
+            background: linear-gradient(to left ,rgb(238, 144, 188),rgb(176, 236, 236));
+            /* height: auto; */
+            padding: 20px;
+            /* margin: auto; */
+            margin-top: 20px;
+            margin-left: 200px;
+            border:none;
+            border-radius: 10px;
+            margin-left: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="text" id="text" placeholder=" Type your List Here">
+    <button id="btn">Add Task</button>
+    <button id="clear">Clear</button>
+    <ul id="taskList">
+        </ul>
+        <script>
+            const text = document.getElementById('text'); // A constant reference is created which cannot be changed. However, the attributes or properties the element or object points to can be changed.
+            const addBtn = document.getElementById('btn');
+            const taskList = document.getElementById('taskList');
+            const clear = document.getElementById('clear');
+            window.addEventListener('load', loadTasks); // loads after  entire page is loaded. 'load' is the event that happens.
+            addBtn.addEventListener('click', () => {
+                const texting = text.value.trim();
+                const li = document.createElement('li');
+                if (texting !== '') {
+                    li.textContent = texting;
+                    taskList.append(li);
+                }
+                li.addEventListener('click', () => {
+                    li.classList.toggle('completed');
+                    saveTasks();
+                });
+                saveTasks();
+            });
+            function saveTasks() {
+                const tasks = [];
+                document.querySelectorAll('#taskList li').forEach(li => {
+                    tasks.push({
+                        text: li.textContent,
+                        completed: li.classList.contains('completed')
+                    });
+                });
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            }
+            function loadTasks() {
+                const tasks = JSON.parse(localStorage.getItem('tasks'));
+                if (tasks) {
+                    tasks.forEach(task => {
+                        const li = document.createElement('li');
+                        li.textContent = task.text;
+                        if (task.completed) {
+                            li.classList.add('completed');
+                        }
+                        li.addEventListener('click', () => {
+                            li.classList.toggle('completed');
+                            saveTasks();
+                        });
+                        taskList.append(li);
+                    });
+                }
+            }
+            localStorage.getItem('tasks');
+            clear.addEventListener('click', () => {
+            let response = confirm('Do you really want to clear all Tasks?');
+            if(response){
+                taskList.innerHTML = ''; // Clear the task list on the page
+                localStorage.removeItem('tasks'); // Remove the tasks from localStorage
+            }
+        });
+
+        </script>
+</body>
+
+</html>
