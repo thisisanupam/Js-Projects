@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: rgb(203, 240, 118);
+        }
+
+        #heading {
+            margin-bottom: 70px;
+            font-size: 72px;
+            display: flex;
+            justify-content: center;
+            background-color: beige;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+
+        .space #time {
+            display: flex;
+            justify-content: center;
+            font-size: 60px;
+            padding-top: 70 px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            height: 30px;
+            width: 50px;
+            margin: 5px;
+            text-transform: uppercase;
+
+        }
+
+        .space {
+            width: 100%;
+        }
+
+        .button {
+            width: 200px;
+            margin: auto;
+        }
+
+        #start {
+            background-color: rgb(226, 132, 132);
+            color: azure;
+            border-radius: 10px;
+        }
+
+        #stop {
+            background-color: rgb(230, 34, 34);
+            color: azure;
+            border-radius: 10px;
+        }
+
+        #reset {
+            background-color: rgb(41, 230, 34);
+            color: azure;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="heading">Pomodoro Timer</h1>
+    <div class="space">
+        <p id="time">25:00</p>
+        <div class="button">
+            <button id="start">Start</button>
+            <button id="stop">Stop</button>
+            <button id="reset">Reset</button>
+        </div>
+    </div>
+    <script>
+        const start = document.getElementById('start');
+        const stop = document.getElementById('stop');
+        const reset = document.getElementById('reset');
+        const timer = document.getElementById('time');
+        let timeLeft = 10;
+        let interval;
+        function updateTimer() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            let timeUpdate = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+            timer.innerHTML = timeUpdate;
+        }
+
+        function startTimer() {
+            interval = setInterval(() => {
+                if(timeLeft>0){
+                    timeLeft--;
+                    updateTimer();
+                }
+                if (timeLeft === 0) {
+                    clearInterval(interval);
+                    alert("Time's Up");
+                    timeLeft = 1500;
+                    updateTimer();
+                }
+            }, 1000);
+
+        }
+        function stopTimer() {
+            clearInterval(interval);
+        }
+        function resetTimer() {
+            clearInterval(interval);
+            timeLeft = 1500;
+            updateTimer();
+        }
+
+        start.addEventListener("click", startTimer);
+        stop.addEventListener("click", stopTimer);
+        reset.addEventListener("click", resetTimer);
+
+    </script>
+</body>
+
+</html>
