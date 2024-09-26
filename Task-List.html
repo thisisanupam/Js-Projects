@@ -1,114 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task List</title>
     <style>
-        body {
-            background-repeat: no-repeat;
-            background-color: black;
-        }
+      body {
+        background-color: #050707;
+        font-family: "Arial", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        color: white;
+        padding: 20px;
+      }
 
-        .completed {
-            text-decoration: line-through;
-        }
+      #container {
+        background-color: #1e1e1e;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+      }
 
+      h1 {
+        color: #ffffff;
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #fafafa;
+        font-size: 16px;
+      }
+
+      button {
+        background-color: #7af062;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin: 5px;
+      }
+
+      button:hover {
+        background-color: #e91e63;
+      }
+
+      #taskList {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      li {
+        background-color: #333;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      li.completed {
+        text-decoration: line-through;
+        opacity: 0.6;
+      }
+
+      li button.deleteBtn {
+        background-color: #ff7961;
+        padding: 6px 12px;
+        font-size: 14px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      li button.deleteBtn:hover {
+        background-color: #e53935;
+      }
+
+      @media (max-width: 768px) {
         input {
-            margin-left: 200px;
-            background-color: antiquewhite;
-            margin-top: 100px;
-            margin-left: 400px;
-            border-radius: 5px;
-            height: 25px;
-
+          font-size: 14px;
+          padding: 10px;
         }
 
-        button {
-            background-color: black;
-            color: blanchedalmond;
-            border-radius: 5px;
+        h1 {
+          font-size: 20px;
         }
-        #taskList{
-            width: 400px;
-            margin: auto;
-            border: 2px solid ;
-            background: linear-gradient(to left ,rgb(238, 144, 188),rgb(176, 236, 236));
-            /* height: auto; */
-            padding: 20px;
-            /* margin: auto; */
-            margin-top: 20px;
-            margin-left: 200px;
-            border:none;
-            border-radius: 10px;
-            margin-left: 300px;
+
+        li {
+          padding: 8px;
         }
+      }
     </style>
-</head>
+  </head>
 
-<body>
-    <input type="text" id="text" placeholder=" Type your List Here">
-    <button id="btn">Add Task</button>
-    <button id="clear">Clear</button>
-    <ul id="taskList">
-        </ul>
-        <script>
-            const text = document.getElementById('text'); // A constant reference is created which cannot be changed. However, the attributes or properties the element or object points to can be changed.
-            const addBtn = document.getElementById('btn');
-            const taskList = document.getElementById('taskList');
-            const clear = document.getElementById('clear');
-            window.addEventListener('load', loadTasks); // loads after  entire page is loaded. 'load' is the event that happens.
-            addBtn.addEventListener('click', () => {
-                const texting = text.value.trim();
-                const li = document.createElement('li');
-                if (texting !== '') {
-                    li.textContent = texting;
-                    taskList.append(li);
-                }
-                li.addEventListener('click', () => {
-                    li.classList.toggle('completed');
-                    saveTasks();
-                });
-                saveTasks();
-            });
-            function saveTasks() {
-                const tasks = [];
-                document.querySelectorAll('#taskList li').forEach(li => {
-                    tasks.push({
-                        text: li.textContent,
-                        completed: li.classList.contains('completed')
-                    });
-                });
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-            }
-            function loadTasks() {
-                const tasks = JSON.parse(localStorage.getItem('tasks'));
-                if (tasks) {
-                    tasks.forEach(task => {
-                        const li = document.createElement('li');
-                        li.textContent = task.text;
-                        if (task.completed) {
-                            li.classList.add('completed');
-                        }
-                        li.addEventListener('click', () => {
-                            li.classList.toggle('completed');
-                            saveTasks();
-                        });
-                        taskList.append(li);
-                    });
-                }
-            }
-            localStorage.getItem('tasks');
-            clear.addEventListener('click', () => {
-            let response = confirm('Do you really want to clear all Tasks?');
-            if(response){
-                taskList.innerHTML = ''; // Clear the task list on the page
-                localStorage.removeItem('tasks'); // Remove the tasks from localStorage
-            }
+  <body>
+    <div id="container">
+      <h1>Task List</h1>
+      <input type="text" id="text" placeholder="Type your task here" />
+      <button id="btn">Add Task</button>
+      <button id="clear">Clear</button>
+      <ul id="taskList"></ul>
+    </div>
+
+    <script>
+      const text = document.getElementById("text");
+      const addBtn = document.getElementById("btn");
+      const taskList = document.getElementById("taskList");
+      const clear = document.getElementById("clear");
+
+      window.addEventListener("load", loadTasks);
+
+      addBtn.addEventListener("click", () => {
+        const texting = text.value.trim();
+        if (texting !== "") {
+          addTask(texting);
+          text.value = "";
+        }
+      });
+
+      function addTask(texting, completed = false) {
+        const li = document.createElement("li");
+        li.textContent = texting;
+
+        if (completed) {
+          li.classList.add("completed");
+        }
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.classList.add("deleteBtn");
+        li.appendChild(deleteBtn);
+
+        taskList.append(li);
+
+        li.addEventListener("click", (e) => {
+          if (e.target !== deleteBtn) {
+            li.classList.toggle("completed");
+            saveTasks();
+          }
+        });
+        deleteBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          li.remove();
+          saveTasks();
         });
 
-        </script>
-</body>
+        saveTasks();
+      }
 
+      function saveTasks() {
+        const tasks = [];
+        document.querySelectorAll("#taskList li").forEach((li) => {
+          tasks.push({
+            text: li.firstChild.textContent,
+            completed: li.classList.contains("completed"),
+          });
+        });
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+      }
+
+      function loadTasks() {
+        const tasks = JSON.parse(localStorage.getItem("tasks"));
+        if (tasks) {
+          tasks.forEach((task) => {
+            addTask(task.text, task.completed);
+          });
+        }
+      }
+
+      clear.addEventListener("click", () => {
+        let response = confirm("Do you really want to clear all tasks?");
+        if (response) {
+          taskList.innerHTML = "";
+          localStorage.removeItem("tasks");
+        }
+      });
+    </script>
+  </body>
 </html>
